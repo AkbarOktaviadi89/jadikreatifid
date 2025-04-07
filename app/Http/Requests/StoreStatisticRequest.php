@@ -11,7 +11,7 @@ class StoreStatisticRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,9 @@ class StoreStatisticRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'goal' => ['required', 'string', 'max: 255'],
+            'icon' => ['required', 'image', 'mimes: png, jpg, jpeg'],
         ];
     }
 }

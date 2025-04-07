@@ -22,7 +22,11 @@ class StorePrincipleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'subtitle' => ['required', 'string', 'max:255'],
+            'thumbnail' => ['required', 'image', 'mimes:png,jpg,jpeg'],
+            'icon' => ['required', 'image', 'mimes:png,jpg,jpeg'],
+
         ];
     }
 }
