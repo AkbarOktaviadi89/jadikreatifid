@@ -12,8 +12,8 @@ class CompanyAboutController extends Controller
      */
     public function index()
     {
-        $companyAbout = CompanyAbout::orderByDesc('id')->paginate(10);
-        return view('admin.abouts.index', compact('companyAbout'));
+        $abouts = CompanyAbout::orderByDesc('id')->paginate(10);
+        return view('admin.abouts.index', compact('abouts'));
     }
 
     /**
@@ -21,6 +21,7 @@ class CompanyAboutController extends Controller
      */
     public function create()
     {
+        return view('admin.abouts.create');
         //
     }
 
