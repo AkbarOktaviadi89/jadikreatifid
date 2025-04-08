@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreAboutRequest;
 use App\Models\CompanyAbout;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CompanyAboutController extends Controller
 {
@@ -28,9 +30,28 @@ class CompanyAboutController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAboutRequest $request)
     {
-        //
+        DB::transaction(function() use($request){
+            $validated = $request->validated();
+
+            if($request->hasFile('thumbnail')){
+                $iconPath = $request->file('thumbnail')->store('thumbnails','public');
+                $validated['thumbnail'] = $iconPath;    
+
+            }
+            $newCompanyAbout = CompanyAbout::create($validated);
+
+            if(!empty($validated['keypoints'])){
+                foreach($validated['keypoints'] as $keypoint){
+                    $newCompanyAbout->keypoints()->create([
+                        'keypoint' => $keypoint
+                    ]);
+                }  
+            }
+        });
+
+        return redirect()->route('admin.abouts.index');
     }
 
     /**
@@ -60,8 +81,11 @@ class CompanyAboutController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CompanyAbout $companyAbout)
+    public function destroy(CompanyAbout $about)
     {
-        //
+        DB::transaction(function() use ($about){
+            $about->delete();
+        });
+        return redirect()->route('admin.abouts.index');
     }
 }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -28,9 +30,20 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        //
+        DB::transaction(function() use($request){
+            $validated = $request->validated();
+
+            if($request->hasFile('thumbnail')){
+                $iconPath = $request->file('thumbnail')->store('thumbnails','public');
+                $validated['thumbnail'] = $iconPath;    
+
+            }
+            $newProduct = Product::create($validated);
+        });
+
+        return redirect()->route('admin.product.index');
     }
 
     /**
@@ -62,6 +75,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        DB::transaction(function() use ($product){
+            $product->delete();
+        });
+        return redirect()->route('admin.products.index');
     }
 }

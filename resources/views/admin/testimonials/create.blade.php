@@ -11,13 +11,14 @@
 
                 @if ($errors->any())
                     @foreach ($errors->all() as $error)
-                        <div class="py-3 w-full rounded-3xl bg-red-500 text-white">
+                        <div class="py-3 w-full rounded-lg bg-red-500 text-white">
                             {{ $error }}
                         </div>
                     @endforeach
                 @endif
                 <form method="POST" action="{{ route('admin.testimonials.store') }}" enctype="multipart/form-data">
 
+                    @csrf
 
                     <div class="mt-4">
                         <x-input-label for="project_client" :value="__('project_client')" />
@@ -25,7 +26,7 @@
                         <select name="project_client_id" id="project_client_id"
                             class="py-3 rounded-lg pl-3 w-full border border-slate-300">
                             <option value="">Choose project_client</option>
-                            @foreach ($clients as $client )
+                            @foreach ($clients as $client)
                                 <option value="{{ $client->id }}">{{ $client->name }}</option>
                             @endforeach
                         </select>

@@ -16,6 +16,7 @@
                 @endforeach
             @endif
             <form method="POST" action="{{ route('admin.clients.store') }}" enctype="multipart/form-data"> 
+                @csrf
 
                     <div>
                         <x-input-label for="name" :value="__('Name')" />
